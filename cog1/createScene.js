@@ -17,16 +17,16 @@ function(exports, scenegraph, animation) {
 	 */
 	function init() {
 
-		var cubeNode = scenegraph.createNodeWithModel("cube", "cube", {scale:300});
+		var cubeNode = scenegraph.createNodeWithModel("mymodel", "mymodel", {scale:300});
 		cubeNode.rotateTo([1.6, -3.87, 0]);
 
 		// BEGIN exercise myModel
 		
 		// END exercise myModel
-		
+
 		return;
 
-		//var cubeNode = scenegraph.createNodeWithModel("cube", "cube", {scale:100, textureURL:"brickWall.jpg"});		
+		//var cubeNode = scenegraph.createNodeWithModel("cube", "cube", {scale:100, textureURL:"brickWall.jpg"});
 		var cubeNode1 = scenegraph.createNodeWithModel("cube 1", "cube", {scale:70, textureURL:"stoneWall.jpg"});
 		cubeNode1.translate([50,200,0]);
 		//cubeNode1.rotate([1,1,1]);
@@ -37,7 +37,7 @@ function(exports, scenegraph, animation) {
 		var cubeNode4 = scenegraph.createNodeWithModel("cube six faces texture", "cube", {scale:200, textureURL:"OrbitCube.gif", sixFacesTexture:true});
 		var cubeNode5 = scenegraph.createNodeWithModel("cube 3x3 texture", "cube", {scale:50, textureURL:"cubeColor.png", sixFacesTexture:true});
 		var cubeNode6 = scenegraph.createNodeWithModel("cube Escher texture", "cube", {scale:200, textureURL:"EscherCubeFish.gif", sixFacesTexture:true});
-		
+
 		var insideOutPolyNode = scenegraph.createNodeWithModel("insideOutPoly", "insideOutPoly");
 
 		var diamondNode = scenegraph.createNodeWithModel("diamond", "diamond");
