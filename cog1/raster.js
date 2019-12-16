@@ -129,35 +129,55 @@ function(exports, shader, framebuffer, data) {
 
 		// BEGIN exercise Bresenham
 		// Comment out the next two lines.
-		drawLine(startX, startY, endX, endY, color);
-		return;
+		//drawLine(startX, startY, endX, endY, color);
+		//return;
 
 		// Skip it, if the line is just a point.
-
+		if (startX == endX && startY == endY) return;
 
 		// Optionally draw start point as is the same
 		// as the end point of the previous edge.
 		// In any case, do not add an intersection for start point here,
 		// this should happen later in the scanline function.
 
-
+		var n = 0;
 		// Distinction of cases for driving variable.
-
+		if (dXAbs >= dYAbs) {
 			// x is driving variable.
-
+			var e = dXAbs - dYAbs2;
+			while(x != endX) {
+				n += 1;
+				x = x + dXSign;
+				if ( e > 0 ) {
+					e -= dYAbs2;
+				} else {
+					y += dYSign;
+					e += dXdYdiff2;
+				}
 						// Do not add intersections for points on horizontal line
 						// and not the end point, which is done in scanline.
 
-					//framebuffer.set(x, y, getZ(x, y), color);
-
+				framebuffer.set(x, y, getZ(x, y), color);
+			}
+		} else {
 			// y is driving variable.
+			var e = dYAbs - dXAbs2;
+			while(y != endY) {
+				n += 1;
+				y = y + dYSign;
+				if ( e > 0 ) {
+					e -= dXAbs2;
+				} else {
+					x += dXSign;
+					e += dYdXdiff2;
+				}
+				// Add every intersection as there can be only one per scan line.
+				// but not the end point, which is done in scanline.
 
-					// Add every intersection as there can be only one per scan line.
-					// but not the end point, which is done in scanline.
-
-						//framebuffer.set(x, y, getZ(x, y), color);
-		
-		// END exercise Bresenham		
+				framebuffer.set(x, y, getZ(x, y), color);
+			}
+		}
+		// END exercise Bresenham
 	};
 
 	/**
