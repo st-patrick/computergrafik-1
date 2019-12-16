@@ -80,20 +80,6 @@ function(exports, shader, framebuffer, data) {
 	 */
 	function drawLineBresenham(startX, startY, startZ, endX, endY, endZ, color, storeIntersectionForScanlineFill, edgeStartVertexIndex, edgeEndVertexIndex, edgeStartTextureCoord, edgeEndTextureCoord) {
 
-		// Let endX be larger than startX.
-		// In this way on a shared edge between polygons the same left most fragment
-		// is stored as intersection and the will never be a gap on a step of the edge.
-		if(endX < startX) {
-			return drawLineBresenham(endX, endY, endZ, startX, startY, startZ, color, storeIntersectionForScanlineFill, edgeEndVertexIndex, edgeStartVertexIndex, edgeEndTextureCoord, edgeStartTextureCoord);
-		}
-
-		if(!storeIntersectionForScanlineFill) {
-			// Set rgbaShaded to rgba in case we do not apply shading.
-			vec3.set(color.rgba, color.rgbaShaded);
-			// set Alpha.
-			color.rgbaShaded[3] = color.rgba[3];
-		}
-
 		var dX = endX - startX;
 		var dY = endY - startY;
 		var dXAbs = Math.abs(dX);
@@ -153,11 +139,16 @@ function(exports, shader, framebuffer, data) {
 				} else {
 					y += dYSign;
 					e += dXdYdiff2;
-				}
-						// Do not add intersections for points on horizontal line
-						// and not the end point, which is done in scanline.
 
-				framebuffer.set(x, y, getZ(x, y), color);
+					// Do not add intersections for points on horizontal line
+					// and not the end point, which is done in scanline.
+					addIntersection(x, y);
+					framebuffer.set(x, y, getZ(x, y), color);
+				}
+			}
+			// on a horizontal line, we will never increase y but still need to add the end point to our intersection array
+			if (startY == endY) {
+				addIntersection(endX, endY);
 			}
 		} else {
 			// y is driving variable.
@@ -173,8 +164,10 @@ function(exports, shader, framebuffer, data) {
 				}
 				// Add every intersection as there can be only one per scan line.
 				// but not the end point, which is done in scanline.
-
-				framebuffer.set(x, y, getZ(x, y), color);
+				if ( y != startY) {
+					addIntersection(x, y);
+					framebuffer.set(x, y, getZ(x, y), color);
+				}
 			}
 		}
 		// END exercise Bresenham
@@ -254,8 +247,63 @@ function(exports, shader, framebuffer, data) {
 
 			// Set texture coordinate uv-vector/array of the current edge for later interpolation.
 
+			// get last non-zero derivative
+			var prevVertexIndex = 0;
+			for (var v = polygon.length-1; v > 0; v--) {
+				var v = polygon.length-1
+				// Determine start st and end point end of edge.
+				var st = vertices[polygon[v]];
+				// Connect edge to next or to first vertex to close the polygon.
+				var end = vertices[polygon[prevVertexIndex]];
 
-			//drawLineBresenham(currX, currY, currZ, nextX, nextY, nextZ, color, true, edgeStartVertexIndex, edgeEndVertexIndex, edgeStartTextureCoord, edgeEndTextureCoord);
+				currY = Math.floor(st[1]);
+				nextY = Math.floor(end[1]);
+
+				lastDerivative = calcDerivative(currY, nextY);
+
+				prevVertexIndex = v;
+
+				if (lastDerivative != 0 ) {
+					break;
+				}
+			}
+
+			// Loop over vertices/edges in polygon.
+			for(var v = 0; v < polygon.length; v++) {
+
+				// Determine start st and end point end of edge.
+				var st = vertices[polygon[v]];
+				// Connect edge to next or to first vertex to close the polygon.
+				var nextVertexIndex = (v < polygon.length - 1) ? v + 1 : 0;
+				var end = vertices[polygon[nextVertexIndex]];
+
+				currX = Math.floor(st[0]);
+				currY = Math.floor(st[1]);
+				currZ = Math.floor(st[2]);
+				nextX = Math.floor(end[0]);
+				nextY = Math.floor(end[1]);
+				nextZ = Math.floor(end[2]);
+				drawLineBresenham(currX, currY, currZ, nextX, nextY, nextZ, color);
+
+				derivative = calcDerivative(currY, nextY);
+
+				//if (derivative == 0) continue;
+
+				//addIntersection(currX, currY, currZ);
+
+				if (lastDerivative + derivative == 0 && derivative != 0) {
+					addIntersection(currX, currY);
+				}
+				if (lastDerivative == 0 && derivative > 0) {
+					addIntersection(currX, currY);
+				}
+				if (lastDerivative < 0 && derivative == 0) {
+					addIntersection(currX, currY);
+				}
+
+				lastDerivative = derivative;
+			}
+
 
 			// Calculate current and save last derivative.
 			//console.log("derivative:" + derivative + " lastDerivative " + lastDerivative);
@@ -480,7 +528,35 @@ function(exports, shader, framebuffer, data) {
 						// shadingFunction(color, interpolationData.weightOnScanline);
 // 
 						// // framebuffer.set without z-Test and dirty rectangle adjust.
-// 
+						var sectionCounter;
+						var startP, endP;
+						scanlineIntersection.forEach((line, y, arr) => {
+							line.sort(function(a,b) {
+								if (a.x > b.x) return 1;
+								if (a.x < b.x) return -1;
+								return 0;
+							});
+
+							if (line.length == 0 || line.length == 1) return;
+
+							sectionCounter = 0;
+							startP = line[sectionCounter*2];
+							endP = line[sectionCounter*2 + 1];
+							while (startP != undefined && endP != undefined) {
+								for(var x = startP.x; x < endP.x; x++) {
+									framebuffer.set(x, y, 0, color)
+								}
+
+								sectionCounter++;
+
+								startP = line[sectionCounter*2];
+								endP = line[sectionCounter*2 + 1];
+							}
+
+
+
+						});
+
 					// }
 					
 					// Step interpolation variables on current scanline.

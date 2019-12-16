@@ -186,7 +186,7 @@ function ui(exports, app, layout, scene, scenegraph, animation, shader, dojo, sn
 
     function initEffektButtons() {
         // Set polygon fill or wireframe for all models.
-        createToggleButton("wireframe", scene.toggleFill, !scene.getFill(), false);
+        createToggleButton("wireframe", scene.toggleFill, !scene.getFill(), true);
         // Toggle perform backface culling.
         createToggleButton("backface culling", scene.toggleBackfaceCulling, scene.getBackfaceCulling());
         // Toggle display matrices, common ones and for interactive node.

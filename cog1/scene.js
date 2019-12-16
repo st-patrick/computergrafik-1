@@ -11,7 +11,7 @@ function(exports, dojo, domStyle, app, scenegraph, createScene, animation, raste
 	// Variables with initialization parameters.
 	//
 	// Fill or stroke polygon.
-	var fill = false;
+	var fill = true;
 	// Display normals for debug.
 	var displayNormals = false;
 	var defaultNormalLength = 50;
