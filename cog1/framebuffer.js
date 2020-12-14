@@ -125,9 +125,19 @@ define(["exports", "scene"], function(exports, scene) {
 	function zBufferTest(x, y, z, color) {
 
 		var indexZBuf = y * width + x;
+		var currentClosest = zBuf[indexZBuf];
+
+		//debugger;
 
 		// BEGIN exercise Z-Buffer
 
+		if (z > zBuf[indexZBuf]) {
+
+			zBuf[indexZBuf] = z;
+			return true;
+		} else {
+			return false;
+		}
 
 		// Z-Buffer pixel starts a frame as undefined.
 		// The first access on a pixel does not need a test.
@@ -143,9 +153,6 @@ define(["exports", "scene"], function(exports, scene) {
 
 
 		// END exercise Z-Buffer
-
-
-		return true;
 	}
 
 	/**

@@ -103,7 +103,7 @@ define(["exports", "shader", "framebuffer", "data", "glMatrix"], //
 			var z = startZ;
 
 			// z is linearly interpolated with delta dz in each step of the driving variable.
-			var dz;
+			var dZ = endZ - startZ;
 
 			// Prepare bi-linear interpolation for shading and textureing.
 			// Interpolated weight in interval [0,1] of the starting- and end-point of the current edge.
@@ -131,9 +131,16 @@ define(["exports", "shader", "framebuffer", "data", "glMatrix"], //
 			if (dXAbs >= dYAbs) {
 				// x is driving variable.
 				var e = dXAbs - dYAbs2;
+
+				// determine step of z per x
+				var zStep = dZ / dXAbs;
+
 				while(x != endX) {
 					n += 1;
 					x = x + dXSign;
+
+					z = z + zStep;
+
 					if ( e > 0 ) {
 						e -= dYAbs2;
 				} else {
@@ -142,20 +149,26 @@ define(["exports", "shader", "framebuffer", "data", "glMatrix"], //
 
 					// Do not add intersections for points on horizontal line
 					// and not the end point, which is done in scanline.
-					addIntersection(x, y);
-					framebuffer.set(x, y, getZ(x, y), color);
+					addIntersection(x, y, z);
+					framebuffer.set(x, y, z, color);
 				}
 			}
 			// on a horizontal line, we will never increase y but still need to add the end point to our intersection array
 			if (startY == endY) {
-				addIntersection(endX, endY);
+				addIntersection(endX, endY, endZ);
 			}
 		} else {
 			// y is driving variable.
 			var e = dYAbs - dXAbs2;
+
+			// determine step of z per x
+			var zStep = dZ / dYAbs;
+
 				while(y != endY) {
 					n += 1;
 					y = y + dYSign;
+					z = z + zStep;
+
 					if ( e > 0 ) {
 						e -= dXAbs2;
 					} else {
@@ -165,8 +178,8 @@ define(["exports", "shader", "framebuffer", "data", "glMatrix"], //
 				// Add every intersection as there can be only one per scan line.
 				// but not the end point, which is done in scanline.
 				if ( y != startY) {
-					addIntersection(x, y);
-					framebuffer.set(x, y, getZ(x, y), color);
+					addIntersection(x, y, z);
+					framebuffer.set(x, y, z, color);
 				}
 			}
 		}
@@ -353,6 +366,8 @@ define(["exports", "shader", "framebuffer", "data", "glMatrix"], //
 		// BEGIN exercise Z-Buffer (for interpolation of z)
 
 		// Calculate dz for linear interpolation along a scanline.
+		var deltaZ = zEndFill - zStartFill;
+
 
 		// END exercise Z-Buffer
 
@@ -543,8 +558,13 @@ define(["exports", "shader", "framebuffer", "data", "glMatrix"], //
 							startP = line[sectionCounter*2];
 							endP = line[sectionCounter*2 + 1];
 							while (startP != undefined && endP != undefined) {
+								var dZ = endP.z - startP.z;
+								var zStep = dZ / (Math.abs(endP.x - startP.x));
+								var z = startP.z;
+
 								for(var x = startP.x; x < endP.x; x++) {
-									framebuffer.set(x, y, 0, color)
+									framebuffer.set(x, y, z, color);
+									z += zStep;
 								}
 
 								sectionCounter++;
