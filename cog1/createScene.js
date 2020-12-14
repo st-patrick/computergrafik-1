@@ -18,8 +18,9 @@ function(exports, scenegraph, animation) {
 	function init() {
 
 		//var cubeNode = scenegraph.createNodeWithModel("mymodel", "mymodel", {scale:300});
-		//cubeNode.rotateTo([1.6, -3.87, 0]);
-
+		var cubeNode = scenegraph.createNodeWithModel("cube", "cube", {scale:300});
+		cubeNode.rotateTo([1.6, -3.87, 0]);
+		return;
 		// BEGIN exercise myModel
 		
 		// END exercise myModel
@@ -39,8 +40,9 @@ function(exports, scenegraph, animation) {
 		var cubeNode6 = scenegraph.createNodeWithModel("cube Escher texture", "cube", {scale:200, textureURL:"EscherCubeFish.gif", sixFacesTexture:true});
 */
 		var insideOutPolyNode = scenegraph.createNodeWithModel("insideOutPoly", "insideOutPoly");
-		return;
+
 		var diamondNode = scenegraph.createNodeWithModel("diamond", "diamond");
+
 
 		var torusNode = scenegraph.createNodeWithModel("torus", "torus");
 		var torusNode1 = scenegraph.createNodeWithModel("torus 13", "torus", {r2:50,n2:13,color:8});
