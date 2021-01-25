@@ -2684,13 +2684,16 @@ define(["exports", "data", "glMatrix"], function (exports, data) {
 
 
         //instance.polygonVertices = [];
+
+		/* !!!!! definitely need these uncommented to copy and paste values from browser to code here
 		console.log("newvertices:");
         console.log(newvertices);
 
         console.log("newfaces:");
         console.log(newfaces);
+		 */
 
-/*
+		/* this isn't working for some reasin
         instance.vertices = newvertices;
         instance.polygonVertices = newfaces;*/
 
@@ -2811,10 +2814,6 @@ define(["exports", "data", "glMatrix"], function (exports, data) {
 
     function divide_all(vertices, triangles) {
 
-        console.log("inside divide all");
-
-        console.log(vertices);
-        console.log(triangles);
         //new_triangles = []
         let new_triangle_count = triangles.length * 4;
 
@@ -2870,7 +2869,6 @@ define(["exports", "data", "glMatrix"], function (exports, data) {
         vertices = v0.concat(b.concat(a.concat(b.concat(v1.concat(c.concat(a.concat(b.concat(c.concat(a.concat(c.concat(v2)))))))))));
         //Now our vertices are duplicated, and thus our triangle structure are unnecesarry.
 
-        console.log("end divide all");
         return vertices;
 
     }

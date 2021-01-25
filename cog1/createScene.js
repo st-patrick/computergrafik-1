@@ -18,8 +18,11 @@ function(exports, scenegraph, animation) {
 	function init() {
 
 		var cubeNode = scenegraph.createNodeWithModel("mymodel", "mymodel", {scale:300});
-		var sphere = scenegraph.createNodeWithModel("sphere", "sphere", {scale:300});
 		cubeNode.rotateTo([1.6, -3.87, 0]);
+		var sphere = scenegraph.createNodeWithModel("sphere", "sphere", {scale:300});
+		var procedural = scenegraph.createNodeWithModel("procedural", "procedural", {scale:300});
+		procedural.rotateTo([1.6, -3.87, 0]);
+
 
 		// BEGIN exercise myModel
 		
@@ -90,6 +93,7 @@ function(exports, scenegraph, animation) {
         cubeNode4.setVisible(false);
         cubeNode5.setVisible(false);
         cubeNode6.setVisible(false);*/
+		sphere.setVisible(false);
         insideOutPolyNode.setVisible(false);
         diamondNode.setVisible(false);
         torusNode.setVisible(false);
@@ -103,7 +107,7 @@ function(exports, scenegraph, animation) {
         
 		// Set the initially interactive node [by name].
 		// If not set, it is the first node created.
-		scenegraph.setInteractiveNodeByName("sphere");
+		scenegraph.setInteractiveNodeByName("procedural");
 		//scenegraph.setInteractiveNode(torusNode);
 
 		// Create a node for the light, which is not visible by default.
