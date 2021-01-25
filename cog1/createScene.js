@@ -17,10 +17,10 @@ function(exports, scenegraph, animation) {
 	 */
 	function init() {
 
-		//var cubeNode = scenegraph.createNodeWithModel("mymodel", "mymodel", {scale:300});
-		var cubeNode = scenegraph.createNodeWithModel("cube", "cube", {scale:300});
+		var cubeNode = scenegraph.createNodeWithModel("mymodel", "mymodel", {scale:300});
+		var sphere = scenegraph.createNodeWithModel("sphere", "sphere", {scale:300});
 		cubeNode.rotateTo([1.6, -3.87, 0]);
-		return;
+
 		// BEGIN exercise myModel
 		
 		// END exercise myModel
@@ -55,7 +55,7 @@ function(exports, scenegraph, animation) {
 		
 		var plainNode1 = scenegraph.createNodeWithModel("plain", "plain", {scale:200, color:9, textureURL:"land_ocean_ice_2048.jpg"});		
 
-		var emptyNode1 = scenegraph.createNodeWithModel("empty", "empty");		
+		var emptyNode1 = scenegraph.createNodeWithModel("empty", "empty");
 
 
         // BEGIN exercise Scenegraph		
@@ -82,13 +82,14 @@ function(exports, scenegraph, animation) {
 		 
 		// Set visibility of nodes (hide: set to false).
 		// Comment out what you want to see as the default is visible.
-        // cubeNode.setVisible(false);
-        cubeNode1.setVisible(false);
+        cubeNode.setVisible(false);
+
+		/*cubeNode1.setVisible(false);
         cubeNode2.setVisible(false);
         cubeNode3.setVisible(false);
         cubeNode4.setVisible(false);
         cubeNode5.setVisible(false);
-        cubeNode6.setVisible(false);
+        cubeNode6.setVisible(false);*/
         insideOutPolyNode.setVisible(false);
         diamondNode.setVisible(false);
         torusNode.setVisible(false);
@@ -102,7 +103,7 @@ function(exports, scenegraph, animation) {
         
 		// Set the initially interactive node [by name].
 		// If not set, it is the first node created.
-		//scenegraph.setInteractiveNodeByName("sphere");
+		scenegraph.setInteractiveNodeByName("sphere");
 		//scenegraph.setInteractiveNode(torusNode);
 
 		// Create a node for the light, which is not visible by default.
@@ -111,6 +112,8 @@ function(exports, scenegraph, animation) {
 		// Set light parameter.
 		// ambientLI, pointLI, pointPos, specularLI, specularLIExpo
 		scenegraph.setLights(0.5, 0.6, [200, 200, 300], 4.0, 10);
+
+
 	}
 
 	// Public API.

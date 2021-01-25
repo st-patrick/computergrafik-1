@@ -44,7 +44,7 @@ require(["dojo", "dojo/parser", "dojo/domReady!"], function(dojo) {
 			//"cog1" : "/home/felix/BHT/src/cog1/cog1_JS_template/cog1"
 			// "cog1" : "file:///U:/BHT/src/cog1/cog1_JS_template"
 			// On same [maybe local] HTTP-server as used to load dojo:
-			"cog1" : "/P5/cog1"
+			"cog1" : "/Sphere/cog1"
 			// "cog1" : "/~gers/cog1_sol/cog1"
 		},
 		// Add one entry for each custom module.
